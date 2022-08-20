@@ -3,9 +3,7 @@ const {
     getText
 } = require("./lib/commands");
 const daysWeek = require("./lib/pageIndex");
-const {
-    getRowPlase,
-} = require("./lib/pageHall");
+const seats = require("../fixtures/seats.json");
 const plases = require("./lib/pageHall");
 
 let page;
@@ -53,8 +51,11 @@ describe("Ticket booking", () => {
         await clickElement(page, daysWeek.sixthDay);
         await clickElement(page, daysWeek.movi1Evening);
         await page.waitForSelector("h1");
-        await clickElement(page, rowPlase(5, 5));
-        await clickElement(page, rowPlase(5, 6));
+        seats.forEach((seat) => {
+            await clickElement(
+                `main > section div:nth-child(${seat.row}) > span:nth-child(${seat.seat})`
+            );
+        });
         await clickElement(page, "button");
         await page.waitForSelector("h1");
         const actual = await getText(
