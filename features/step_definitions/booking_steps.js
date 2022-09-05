@@ -7,13 +7,18 @@ const {
     When,
     Then,
     Before,
-    After,
-    BeforeAll
+    After
 } = require("cucumber");
 const {
     clickElement,
-    getText
+    getText,
+    row1PlaseVip,
+    seats
 } = require("../../lib/commands.js");
+const {
+    days,
+    moviTime
+} = require("../../lib/pageIndex.js");
 
 Before({
     timeout: 60 * 1000
@@ -42,18 +47,22 @@ Given("user is on {string} page", {
     });
 });
 
-When("user chooses by {string}", {
+When("user chooses by day {string}", {
     timeout: 60 * 1000
 }, async function(string) {
-    await clickElement(this.page, string);
+    await days(this.page, string);
 });
 
-When("user chooses movie {string}", async function(string) {
-    return await clickElement(this.page, string);
+When("user chooses movie {string}, {string}", async function(string, string2) {
+    return await moviTime(this.page, string, string2);
 });
 
-When("user chooses seat {string}", async function(string) {
-    return await clickElement(this.page, string);
+When("user chooses seat Vip {string}", async function(string) {
+    return await row1PlaseVip(this.page, string);
+});
+
+When("user chooses seat {string}, {string}", async function(string, string2) {
+    return await seats(this.page, string, string2);
 });
 
 When("user click {string}", async function(string) {
@@ -86,6 +95,5 @@ Then("user sees {string} is gray", {
     const disabledButton = await page.$('button[disabled]');
     const isDisabled = await disabledButton !== null;
     await this.page.waitForNavigation(30000);
-
-    await expect(isDisabled).to.not.be.null;
+    expect(isDisabled).to.not.be.null;
 });

@@ -1,10 +1,13 @@
 const {
     clickElement,
-    getText
+    getText,
+    row1PlaseVip,
+    seats
 } = require("./lib/commands");
-const daysWeek = require("./lib/pageIndex");
-const seats = require("../fixtures/seats.json");
-const plases = require("./lib/pageHall");
+const {
+    days,
+    moviTime
+} = require("./lib/pageIndex");
 
 let page;
 
@@ -18,17 +21,17 @@ afterEach(() => {
 });
 
 describe("Ticket booking", () => {
-    beforeAll(async() => {
+    beforeEach(async() => {
         await page.goto("http://qamid.tmweb.ru/client/index.php", {
             timeout: 60000,
         });
     });
 
     test("should book one VIP seat", async() => {
-        await clickElement(page, daysWeek.fifthDay);
-        await clickElement(page, daysWeek.movi3Day);
+        await days(page, "5");
+        await moviTime(page, "2", "2");
         await page.waitForSelector("h1");
-        await clickElement(page, plases.row1PlaseVip);
+        await row1PlaseVip(page, "1");
         await clickElement(page, "button");
         await page.waitForSelector("h1");
         const actual = await getText(
@@ -48,14 +51,11 @@ describe("Ticket booking", () => {
     }, 60000);
 
     test("should book two seats", async() => {
-        await clickElement(page, daysWeek.sixthDay);
-        await clickElement(page, daysWeek.movi1Evening);
+        await days(page, "6");
+        await moviTime(page, "1", "3");
         await page.waitForSelector("h1");
-        seats.forEach((seat) => {
-            await clickElement(
-                `main > section div:nth-child(${seat.row}) > span:nth-child(${seat.seat})`
-            );
-        });
+        await seats(page, "5", "6");
+        await seats(page, "5", "7");
         await clickElement(page, "button");
         await page.waitForSelector("h1");
         const actual = await getText(
@@ -63,7 +63,7 @@ describe("Ticket booking", () => {
             "main > section > div > p:nth-child(2) > span",
             (text) => text.textContent
         );
-        const expected = "5/5, 5/6";
+        const expected = "5/6, 5/7";
         const actualPrise = await getText(
             page,
             "main > section > div > p:nth-child(6) > span",
@@ -75,8 +75,8 @@ describe("Ticket booking", () => {
     }, 60000);
 
     test("should not book", async() => {
-        await clickElement(page, daysWeek.secondDay);
-        await clickElement(page, daysWeek.movi3Morning);
+        await days(page, "2");
+        await moviTime(page, "2", "3");
         await page.waitForSelector("h1");
         await clickElement(page, "button");
         const actual = await getText(page, "h2", (text) => text.textContent);

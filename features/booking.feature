@@ -1,26 +1,26 @@
 Feature: Booking a seat
     Scenario: Should book one seat
         Given user is on "/client/index.php" page
-        When user chooses by "nav > a:nth-child(5) > span.page-nav__day-number"
-        When user chooses movie "body > main > section:nth-child(3) > div:nth-child(2) > ul > li > a"
-        When user chooses seat "section  div:nth-child(1) > span.buying-scheme__chair.buying-scheme__chair_vip"
+        When user chooses by day "5"
+        When user chooses movie "2", "2"
+        When user chooses seat Vip "1"
         When user click "button"
         Then user sees text "Вы выбрали билеты:"
         Then user sees the reserved seat "1/2"
 
     Scenario: Should book two seats
         Given user is on "/client/index.php" page
-        When user chooses by "nav > a:nth-child(6) > span.page-nav__day-number"
-        When user chooses movie "main > section:nth-child(2) > div:nth-child(2) > ul > li > a"
-        When user chooses seat "main > section div:nth-child(5) > span:nth-child(5)"
-        When user chooses seat "main > section div:nth-child(5) > span:nth-child(6)"
+        When user chooses by day "6"
+        When user chooses movie "1", "3"
+        When user chooses seat "5", "6"
+        When user chooses seat "5", "7"
         When user click "button"
         Then user sees text "Вы выбрали билеты:"
-        Then user sees the reserved seat "5/5, 5/6"
+        Then user sees the reserved seat "5/6, 5/7"
 
     Scenario: Should not book
         Given user is on "/client/index.php" page
-        When user chooses by "nav > a:nth-child(2) > span.page-nav__day-number"
-        When user chooses movie "body > main > section:nth-child(3) > div:nth-child(3) > ul > li > a"
+        When user chooses by day "2"
+        When user chooses movie "2", "3"
         When user click "button"
         Then user sees the header "Фильм 3"
