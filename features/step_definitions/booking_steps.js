@@ -53,7 +53,7 @@ When("user chooses by day {string}", {
     await days(this.page, string);
 });
 
-When("user chooses movie {string}, {string}", async function(string, string2) {
+When("user chooses movie {string} show {string}", async function(string, string2) {
     return await moviTime(this.page, string, string2);
 });
 
